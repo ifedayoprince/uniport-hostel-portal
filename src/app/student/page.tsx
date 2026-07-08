@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { 
   LayoutDashboard, Search, FileText, CreditCard, Settings, LogOut, 
   MapPin, Users, CheckCircle, Clock, XCircle, Plus, HelpCircle, 
-  Filter, SlidersHorizontal, User, Home, ArrowRight
+  Filter, SlidersHorizontal, User, Home, ArrowRight, Menu, X
 } from 'lucide-react';
 
 interface UserSession {
@@ -178,11 +178,37 @@ export default function StudentDashboard() {
     return `APP-${year}-${shortId}`;
   };
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex font-sans">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col lg:flex-row font-sans">
+      
+      {/* Mobile Top Navigation */}
+      <header className="lg:hidden flex items-center justify-between bg-[#f8fafc] border-b border-slate-200/80 px-6 py-4 sticky top-0 z-40">
+        <div>
+          <span className="font-semibold text-[#0a2540] text-lg tracking-tight block">UNIPORT Portal</span>
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block -mt-1">Student Access</span>
+        </div>
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all"
+        >
+          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </header>
+
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
       
       {/* ─── CONSISTENT SIDEBAR LAYOUT ─── */}
-      <aside className="w-64 bg-[#f8fafc] border-r border-slate-200/80 p-6 flex flex-col shrink-0">
+      <aside className={`fixed inset-y-0 left-0 w-64 bg-[#f8fafc] border-r border-slate-200/80 p-6 flex flex-col shrink-0 z-50 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:h-auto ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         <div className="mb-8 pt-4">
           <span className="font-semibold text-[#0a2540] text-xl tracking-tight block">UNIPORT Portal</span>
           <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block -mt-0.5">Student Access</span>
@@ -191,7 +217,7 @@ export default function StudentDashboard() {
         {/* Sidebar Menu */}
         <nav className="flex flex-col space-y-1">
           <button 
-            onClick={() => {}}
+            onClick={() => { setIsSidebarOpen(false); }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-900 justify-start transition-all"
           >
             <LayoutDashboard className="w-4 h-4" />
@@ -199,7 +225,7 @@ export default function StudentDashboard() {
           </button>
 
           <button 
-            onClick={() => setActiveTab('search')}
+            onClick={() => { setActiveTab('search'); setIsSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold justify-start transition-all ${
               activeTab === 'search'
                 ? 'bg-[#e2e8f0] text-[#0a2540] border-l-4 border-[#0a2540] pl-3'
@@ -211,7 +237,7 @@ export default function StudentDashboard() {
           </button>
 
           <button 
-            onClick={() => setActiveTab('applications')}
+            onClick={() => { setActiveTab('applications'); setIsSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold justify-start transition-all ${
               activeTab === 'applications'
                 ? 'bg-[#e2e8f0] text-[#0a2540] border-l-4 border-[#0a2540] pl-3'
@@ -223,7 +249,7 @@ export default function StudentDashboard() {
           </button>
 
           <button 
-            onClick={() => {}}
+            onClick={() => { setIsSidebarOpen(false); }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-900 justify-start transition-all"
           >
             <CreditCard className="w-4 h-4" />
@@ -231,7 +257,7 @@ export default function StudentDashboard() {
           </button>
 
           <button 
-            onClick={() => {}}
+            onClick={() => { setIsSidebarOpen(false); }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-900 justify-start transition-all"
           >
             <Settings className="w-4 h-4" />
@@ -241,7 +267,7 @@ export default function StudentDashboard() {
 
         {/* New Application Action Button */}
         <button 
-          onClick={() => setActiveTab('search')}
+          onClick={() => { setActiveTab('search'); setIsSidebarOpen(false); }}
           className="bg-[#0a2540] hover:bg-[#0d3154] text-white text-xs font-semibold py-3.5 px-4 rounded-md mt-6 flex items-center justify-center gap-2 w-full transition-all shadow-xs"
         >
           <Plus className="w-4 h-4" />
@@ -273,7 +299,7 @@ export default function StudentDashboard() {
       </aside>
 
       {/* ─── MAIN CONTENT AREA ─── */}
-      <main className="flex-1 p-10 pl-14 space-y-8 max-w-7xl overflow-y-auto">
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 lg:pl-14 space-y-8 max-w-7xl overflow-y-auto w-full">
         
         {/* ROOM SEARCH CONTENT */}
         {activeTab === 'search' && (
@@ -421,7 +447,7 @@ export default function StudentDashboard() {
             {/* Applications List */}
             <div className="space-y-4">
               {/* Header Titles */}
-              <div className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1fr] px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+              <div className="hidden md:grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1fr] px-6 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                 <span>Application ID</span>
                 <span>Hostel Name</span>
                 <span>Date Applied</span>
@@ -440,44 +466,55 @@ export default function StudentDashboard() {
                 </div>
               ) : (
                 applications.map((app) => (
-                  <div key={app.id} className="grid grid-cols-[1.5fr_2fr_1.5fr_1fr_1fr] items-center bg-white border border-slate-200/80 rounded-md p-5 shadow-xs transition-all hover:shadow-sm">
+                  <div key={app.id} className="flex flex-col md:grid md:grid-cols-[1.5fr_2fr_1.5fr_1fr_1fr] md:items-center gap-4 md:gap-0 bg-white border border-slate-200/80 rounded-md p-5 shadow-xs transition-all hover:shadow-sm">
                     
                     {/* ID */}
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center justify-between md:justify-start space-x-3 w-full md:w-auto">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider md:hidden">Application ID</span>
                       <span className="text-xs font-semibold text-[#0a2540] font-mono">{formatAppId(app)}</span>
                     </div>
 
                     {/* Hostel Details */}
-                    <div className="flex items-center space-x-3">
-                      <div className="w-8 h-8 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
-                        <Home className="w-4 h-4 text-slate-400" />
-                      </div>
-                      <div>
-                        <h4 className="text-xs font-semibold text-[#0a2540]">{app.hostel?.name || 'Unknown'}</h4>
-                        <p className="text-[10px] text-slate-400 font-semibold">{getRoomSubtitle(app.hostel?.name || '')}</p>
+                    <div className="flex items-center justify-between md:justify-start space-x-3 w-full md:w-auto">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider md:hidden">Hostel</span>
+                      <div className="flex items-center space-x-3">
+                        <div className="w-8 h-8 rounded-md bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                          <Home className="w-4 h-4 text-slate-400" />
+                        </div>
+                        <div>
+                          <h4 className="text-xs font-semibold text-[#0a2540]">{app.hostel?.name || 'Unknown'}</h4>
+                          <p className="text-[10px] text-slate-400 font-semibold">{getRoomSubtitle(app.hostel?.name || '')}</p>
+                        </div>
                       </div>
                     </div>
 
                     {/* Date */}
-                    <span className="text-xs font-semibold text-slate-500">
-                      {new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
-                    </span>
-
-                    {/* Status Badge */}
-                    <div>
-                      <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold tracking-wide ${
-                        app.status === 'APPROVED' 
-                          ? 'bg-[#d1fae5] text-[#065f46]' 
-                          : app.status === 'PENDING'
-                          ? 'bg-[#fef3c7] text-[#92400e]'
-                          : 'bg-[#fee2e2] text-[#991b1b]'
-                      }`}>
-                        {app.status}
+                    <div className="flex items-center justify-between md:justify-start space-x-3 w-full md:w-auto">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider md:hidden">Date Applied</span>
+                      <span className="text-xs font-semibold text-slate-500">
+                        {new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
                       </span>
                     </div>
 
+                    {/* Status Badge */}
+                    <div className="flex items-center justify-between md:justify-start space-x-3 w-full md:w-auto">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider md:hidden">Status</span>
+                      <div>
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-[10px] font-semibold tracking-wide ${
+                          app.status === 'APPROVED' 
+                            ? 'bg-[#d1fae5] text-[#065f46]' 
+                            : app.status === 'PENDING'
+                            ? 'bg-[#fef3c7] text-[#92400e]'
+                            : 'bg-[#fee2e2] text-[#991b1b]'
+                        }`}>
+                          {app.status}
+                        </span>
+                      </div>
+                    </div>
+
                     {/* Action Button */}
-                    <div className="text-right pr-4">
+                    <div className="flex items-center justify-between md:justify-start md:text-right md:pr-4 w-full md:w-auto border-t md:border-t-0 pt-3 md:pt-0">
+                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider md:hidden">Actions</span>
                       <button className="text-xs font-semibold text-[#0a2540] hover:text-[#0d3154] transition-colors">
                         {app.status === 'APPROVED' ? (app.isPaid ? 'View Receipt' : 'Pay Fee') : app.status === 'PENDING' ? 'Modify' : 'Details'}
                       </button>

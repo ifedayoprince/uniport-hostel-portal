@@ -7,7 +7,7 @@ import {
   HelpCircle, ShieldAlert, CheckCircle, Plus, SlidersHorizontal,
   Calendar, Upload, BookOpen,
   Settings, Building2, Users, BedDouble, DollarSign, Filter,
-  UserRound, GraduationCap, Phone, Mail, ShieldCheck
+  UserRound, GraduationCap, Phone, Mail, ShieldCheck, Menu
 } from 'lucide-react';
 
 interface User {
@@ -257,11 +257,37 @@ export default function AdminDashboard() {
   const capacityFilledPercentage = totalCapacity > 0 && !isNaN(totalOccupied) ? Math.round((totalOccupied / totalCapacity) * 100) : 0;
   const computedCapacity = (parseInt(totalRooms) || 0) * (parseInt(bedsPerRoom) || 0);
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
   return (
-    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex font-sans">
+    <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col lg:flex-row font-sans">
+
+      {/* Mobile Top Navigation */}
+      <header className="lg:hidden flex items-center justify-between bg-[#f8fafc] border-b border-slate-200/80 px-6 py-4 sticky top-0 z-40">
+        <div>
+          <span className="font-semibold text-[#0a2540] text-lg tracking-tight block">UNIPORT Portal</span>
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block -mt-1">Admin Access</span>
+        </div>
+        <button 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="p-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all"
+        >
+          {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </header>
+
+      {/* Sidebar Overlay for Mobile */}
+      {isSidebarOpen && (
+        <div 
+          className="lg:hidden fixed inset-0 bg-black/40 backdrop-blur-xs z-40 transition-opacity"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
 
       {/* ─── CONSISTENT SIDEBAR LAYOUT (MATCHES STUDENT LAYOUT) ─── */}
-      <aside className="w-64 bg-[#f8fafc] border-r border-slate-200/80 p-6 flex flex-col shrink-0">
+      <aside className={`fixed inset-y-0 left-0 w-64 bg-[#f8fafc] border-r border-slate-200/80 p-6 flex flex-col shrink-0 z-50 transition-transform duration-300 transform lg:translate-x-0 lg:static lg:h-auto ${
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      }`}>
         <div className="mb-8 pt-4">
           <span className="font-semibold text-[#0a2540] text-xl tracking-tight block">UNIPORT Portal</span>
           <span className="text-[11px] text-slate-400 font-semibold uppercase tracking-wider block -mt-0.5">Admin Access</span>
@@ -270,7 +296,7 @@ export default function AdminDashboard() {
         {/* Sidebar Menu */}
         <nav className="flex flex-col space-y-1">
           <button
-            onClick={() => { }}
+            onClick={() => { setIsSidebarOpen(false); }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-900 justify-start transition-all"
           >
             <ClipboardList className="w-4 h-4" />
@@ -278,7 +304,7 @@ export default function AdminDashboard() {
           </button>
 
           <button
-            onClick={() => setActiveTab('view-users')}
+            onClick={() => { setActiveTab('view-users'); setIsSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold justify-start transition-all ${activeTab === 'view-users'
                 ? 'bg-[#e2e8f0] text-[#0a2540] border-l-4 border-[#0a2540] pl-3'
                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
@@ -289,7 +315,7 @@ export default function AdminDashboard() {
           </button>
 
           <button
-            onClick={() => setActiveTab('applications')}
+            onClick={() => { setActiveTab('applications'); setIsSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold justify-start transition-all ${activeTab === 'applications'
                 ? 'bg-[#e2e8f0] text-[#0a2540] border-l-4 border-[#0a2540] pl-3'
                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
@@ -300,7 +326,7 @@ export default function AdminDashboard() {
           </button>
 
           <button
-            onClick={() => setActiveTab('view-hostels')}
+            onClick={() => { setActiveTab('view-hostels'); setIsSidebarOpen(false); }}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold justify-start transition-all ${activeTab === 'view-hostels'
                 ? 'bg-[#e2e8f0] text-[#0a2540] border-l-4 border-[#0a2540] pl-3'
                 : 'text-slate-500 hover:bg-slate-100 hover:text-slate-900'
@@ -311,7 +337,7 @@ export default function AdminDashboard() {
           </button>
 
           <button
-            onClick={() => { }}
+            onClick={() => { setIsSidebarOpen(false); }}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-md text-xs font-semibold text-slate-500 hover:bg-slate-100 hover:text-slate-900 justify-start transition-all"
           >
             <Settings className="w-4 h-4" />
@@ -321,7 +347,7 @@ export default function AdminDashboard() {
 
         {/* Action Button */}
         <button
-          onClick={() => setActiveTab('create-hostel')}
+          onClick={() => { setActiveTab('create-hostel'); setIsSidebarOpen(false); }}
           className="bg-[#0a2540] hover:bg-[#0d3154] text-white text-xs font-semibold py-3.5 px-4 rounded-md mt-6 flex items-center justify-center gap-2 w-full transition-all shadow-xs"
         >
           <Plus className="w-4 h-4" />
@@ -341,7 +367,7 @@ export default function AdminDashboard() {
       </aside>
 
       {/* ─── MAIN CONTENT AREA ─── */}
-      <main className="flex-1 p-10 pl-14 space-y-8 max-w-7xl overflow-y-auto">
+      <main className="flex-1 p-4 sm:p-6 lg:p-10 lg:pl-14 space-y-8 max-w-7xl overflow-y-auto w-full">
 
         {/* REVIEW APPLICATIONS TAB */}
         {activeTab === 'applications' && (

@@ -33,7 +33,7 @@ model User {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   fullName     String
   matricNumber String        @unique
-  email        String?       @unique
+  email        String?
   phoneNumber  String
   password     String
   campus       Campus
