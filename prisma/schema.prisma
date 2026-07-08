@@ -1,0 +1,70 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum Campus {
+  CHOBA
+  ABUJA
+  DELTA
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+model User {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  fullName     String
+  matricNumber String        @unique
+  email        String?       @unique
+  phoneNumber  String
+  password     String
+  campus       Campus
+  gender       Gender
+  role         Role          @default(STUDENT)
+  applications Application[]
+  createdAt    DateTime      @default(now())
+}
+
+model Hostel {
+  id           String        @id @default(auto()) @map("_id") @db.ObjectId
+  name         String
+  campus       Campus
+  gender       Gender
+  price        Float
+  description  String
+  totalRooms   Int
+  bedsPerRoom  Int
+  capacity     Int
+  amenities    String[]
+  applications Application[]
+  createdAt    DateTime      @default(now())
+}
+
+model Application {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentId String   @db.ObjectId
+  student   User     @relation(fields: [studentId], references: [id])
+  hostelId  String   @db.ObjectId
+  hostel    Hostel   @relation(fields: [hostelId], references: [id])
+  status    Status   @default(PENDING)
+  isPaid    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

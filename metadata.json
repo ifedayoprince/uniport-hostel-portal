@@ -1,0 +1,6 @@
+{
+  "name": "UNIPORT Hostel Allocation Portal",
+  "description": "An elegant, modern hostel portal for UNIPORT students to search halls, submit applications, make payments, and for admins to manage inventory and approvals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
