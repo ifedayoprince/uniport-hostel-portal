@@ -62,6 +62,7 @@ export default function StudentDashboard() {
   const [actionLoading, setActionLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
   const [selectedHostelDetails, setSelectedHostelDetails] = useState<Hostel | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Authentication validation
   useEffect(() => {
@@ -177,8 +178,6 @@ export default function StudentDashboard() {
     const shortId = app.id.slice(-3).toUpperCase();
     return `APP-${year}-${shortId}`;
   };
-
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 flex flex-col lg:flex-row font-sans">
